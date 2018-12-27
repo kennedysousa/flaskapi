@@ -1,0 +1,5 @@
+# Packages
+flaskapi
+
+# Cache
+__pycache__
