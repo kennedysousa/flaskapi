@@ -10,6 +10,7 @@ Created on Wed Dec 26 21:00:06 2018
 import os.path
 import pickle
 import requests
+import json
 
 from flask import Flask, render_template, jsonify, request, flash, redirect, url_for
 from flask_bootstrap import Bootstrap
@@ -23,6 +24,18 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret key'
 bootstrap = Bootstrap(app)
 moment = Moment(app)
+
+clf = 'model.pk'
+sentiment = {'Negative': -1, 'Neutral': 0, 'Positive': 1}
+    
+#Load the saved model
+print("Loading the model...")
+loaded_model = None
+
+with open('./models/'+clf,'rb') as f:
+    loaded_model = pickle.load(f)
+
+print("The model has been loaded... \nReady to make predictions...")
 
 class TextForm(FlaskForm):
     text = TextAreaField('Type the text to classify:', validators=[DataRequired()])
@@ -46,14 +59,26 @@ def apicall():
 
     try:
         request_json = request.get_json()
-        # test = pd.read_json(request_json, orient='records')
+        
+
+        #predictions = loaded_model.predict(request_json)
+
+        print(request_json['text'])
+
+        probability = loaded_model.predict_proba([request_json['text']])
+        
+        print (json.dumps({"comment": request_json['text'],
+                        "sentiment": dict(zip(list(sentiment.keys()), list(probability[0])))
+                    }, 
+                    sort_keys=False, indent=4, separators=(',', ': '), ensure_ascii=False))
+
+        responses = jsonify({"comment": request_json['text'],
+                        "sentiment": dict(zip(list(sentiment.keys()), list(probability[0])))
+                    })
+
+        responses.status_code = 200
     except Exception as e:
         raise e
-
-    print(request_json)
-    
-    responses = jsonify(name="Kennedy")
-    responses.status_code = 200
     
     return (responses)
 

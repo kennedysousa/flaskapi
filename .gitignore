@@ -3,3 +3,6 @@ flaskapi
 
 # Cache
 __pycache__
+
+# Jupyter notebook checkpoint
+.ipynb_checkpoint
