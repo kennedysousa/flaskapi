@@ -26,24 +26,24 @@ _Publicando modelos de classificação de textos através de uma API_
 	```
 		conda env create flaskapi
 		source activate flaskapi
-        pip install -r requirements.txt
+		pip install -r requirements.txt
 	```
 
 4. Se preferir, gere os certificados auto-assinados.
 
     Para __Linux__:
     ```
-        openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365
+        	openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365
     ```
 
 5. Inicie o servidor.
 
     Para __Linux__:
     ```
-        gunicorn --certfile cert.pem --keyfile key.pem -b localhost:8080 server:app
+        	gunicorn --certfile cert.pem --keyfile key.pem -b localhost:8080 server:app
     ```
     
     Para __Windows__:
     ```
-        waitress-serve --listen=localhost:8080 server:app
+        	waitress-serve --listen=localhost:8080 server:app
     ```
